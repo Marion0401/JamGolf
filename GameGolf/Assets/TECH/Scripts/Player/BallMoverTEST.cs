@@ -5,6 +5,12 @@ using UnityEngine;
 public class BallMoverTEST : MonoBehaviour
 {
     private Rigidbody m_rigidBody = null;
+    public static BallMoverTEST Instance;
+
+    private void Awake()
+    {
+        Instance = this;
+    }
 
     private void Start()
     {
@@ -16,6 +22,7 @@ public class BallMoverTEST : MonoBehaviour
         if (Input.GetKeyDown(KeyCode.UpArrow))
         {
             m_rigidBody.AddForce(transform.forward, ForceMode.Impulse);
+            GameManager.instance.SendPosition();
         }
 
         if (Input.GetKeyDown(KeyCode.DownArrow))

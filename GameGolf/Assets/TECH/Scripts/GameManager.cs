@@ -24,6 +24,7 @@ public class GameManager : MonoBehaviour {
 
 	private Connection pioconnection;
 	private List<Message> msgList = new List<Message>(); //  Messsage queue implementation
+	public static GameManager instance; 
 
 
 	// UI stuff
@@ -89,8 +90,12 @@ public class GameManager : MonoBehaviour {
 	void FixedUpdate() {
 		// process message queue
 		foreach (Message m in msgList) {
-			switch (m.Type) {
-				
+			switch (m.Type) 
+			{
+				case "Move":
+					Debug.Log(m.GetInt(0));
+
+					break;
 			}
 		}
 
@@ -98,7 +103,10 @@ public class GameManager : MonoBehaviour {
 		msgList.Clear();
 	}
 
-
+	public void SendPosition()
+    {
+		pioconnection.Send("Move",2,3);
+    }
 	void OnGUI() {
 		
 		GUI.Label(new Rect(10, 160, 150, 20), "Toadstools picked: ");
