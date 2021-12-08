@@ -6,17 +6,21 @@ public class PlayerIdentity : MonoBehaviour
 {
     [SerializeField] private GameObject[] _ballPrefab = new GameObject[0];
 
-    private void Start()
-    {
-        SetTeam(Team.red);
-    }
-
     public Team _team;
 
     public void SetTeam(Team newTeam)
     {
         _team = newTeam;
-        _ballPrefab[(int)_team].SetActive(true);
+        if((int)newTeam == 0)
+        {
+            _ballPrefab[0].SetActive(true);
+            _ballPrefab[1].SetActive(false);
+        }
+        else if((int)newTeam == 1)
+        {
+            _ballPrefab[0].SetActive(false);
+            _ballPrefab[1].SetActive(true);
+        }
     }
 }
 

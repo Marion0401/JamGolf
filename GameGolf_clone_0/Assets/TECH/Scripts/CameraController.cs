@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class CameraController : MonoBehaviour
 {
-    [SerializeField] private GameObject _currBall = null;
+    public GameObject _currBall = null;
 
     private Vector3 _offsetCamera = new Vector3();
 

@@ -48,7 +48,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!4 &3009866380049807393
 Transform:
   m_ObjectHideFlags: 0
@@ -326,7 +326,7 @@ Rigidbody:
   m_UseGravity: 1
   m_IsKinematic: 0
   m_Interpolate: 0
-  m_Constraints: 0
+  m_Constraints: 112
   m_CollisionDetection: 0
 --- !u!135 &4590510679699274969
 SphereCollider:
@@ -360,7 +360,7 @@ MonoBehaviour:
   _maxPower: 5
   _powerSpeed: 0.005
   _powerBarImg: {fileID: 0}
-  _lastPosition: {x: 0, y: 0, z: 0}
+  _canPlay: 0
 --- !u!114 &2521638538570096965
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -376,4 +376,4 @@ MonoBehaviour:
   _ballPrefab:
   - {fileID: 3064705776237181256}
   - {fileID: 2490175214738088603}
-  _team: 0
+  _team: 1

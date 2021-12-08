@@ -22,6 +22,4 @@ public class GameManagerOffline : MonoBehaviour
     {
         Debug.Log(currPlayer);
     }
-
-
 }

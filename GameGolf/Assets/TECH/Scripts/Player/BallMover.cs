@@ -7,7 +7,7 @@ public class BallMover : MonoBehaviour
     [SerializeField] private LayerMask _floorMask = new LayerMask();
     [SerializeField] private float _maxPower = 3f;
     [SerializeField] private float _powerSpeed = 0.10f;
-    [SerializeField] private Image _powerBarImg = null;
+    [SerializeField] public Image _powerBarImg = null;
     
     private Rigidbody _rigidBody = null;
 
@@ -32,18 +32,21 @@ public class BallMover : MonoBehaviour
     }
     #endregion
 
-    private void Start()
+    private void Awake()
     {
-        _rigidBody = this.gameObject.GetComponent<Rigidbody>();
-
-        _lastPosition = transform.position;
-
         GameObject[] otherBall = GameObject.FindGameObjectsWithTag("Player");
 
         foreach (GameObject item in otherBall)
         {
             Physics.IgnoreCollision(this.gameObject.GetComponent<Collider>(), item.GetComponent<Collider>());
         }
+    }
+
+    private void Start()
+    {
+        _rigidBody = this.gameObject.GetComponent<Rigidbody>();
+
+        _lastPosition = transform.position;        
     }
 
     private void Update()
@@ -97,7 +100,7 @@ public class BallMover : MonoBehaviour
             {
                 MoveBall(_currDirection, _currPower);
                 _isLaunched = true;
-                //GameManager.instance.SendPosition(_currDirection, _currPower);
+                GameManager.instance.MoveBallServer(_currDirection, _currPower);
             }
         }   
         
@@ -146,12 +149,19 @@ public class BallMover : MonoBehaviour
     {
         _isLaunched = false;
         _lastPosition = transform.position;
+        GameManager.instance.AdjustBallPosServer(transform.position);
         EndRound();
+    }
+
+    public void MoveBallAtWorldPos(Vector3 newPos)
+    {
+        transform.position = newPos + new Vector3(0,0.01f,0f);
     }
 
     private void EndRound()
     {
         _canPlay = false;
+        GameManager.instance.PlayerEndRound();
     }
 
     public void MoveBall(Vector3 newDir, float newPower)

@@ -14,22 +14,38 @@ using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
 using PlayerIOClient;
-
-
+using UnityEngine.UI;
 
 public class GameManager : MonoBehaviour {
 
 	private Connection pioconnection;
 	private List<Message> msgList = new List<Message>(); //  Messsage queue implementation
 	public static GameManager instance;
-	public BallMover ballMover;
+	public BallMover currBallMover;
 	public GameObject playerPrefab = null;
-	public GameObject myBall;
-	public GameObject enemyBall;
+	public GameObject uiPowerBar = null;
+	private GameObject myBall;
+	private GameObject enemyBall;
+	public CameraController cameraController = null;
+	public Transform[] startPoins = new Transform[0];
 
+	public Team _clientTeam;
 
 	// UI stuff
 	private string infomsg = "";
+
+	#region OnEnable / OnDisable
+	private void OnEnable()
+	{
+		EndRound.BallInHole += IsEndMap;
+	}
+
+	private void OnDisable()
+	{
+		EndRound.BallInHole -= IsEndMap;
+	}
+
+	#endregion
 
 	public void Awake()
     {
@@ -86,7 +102,6 @@ public class GameManager : MonoBehaviour {
 				infomsg = error.ToString();
 			}
 		);
-
 	}
 
 	void handlemessage(object sender, Message m) {
@@ -102,66 +117,91 @@ public class GameManager : MonoBehaviour {
 					Vector3 direction = new Vector3(m.GetFloat(0), m.GetFloat(1), m.GetFloat(2));
 					MoveBall(direction, m.GetFloat(3));
 					break;
-				case "CreateGame":
-					CreationGame();
+
+				case "StartGame":
 					break;
-				case "Item":
+
+				case "InitializeGame":
+					_clientTeam = (Team)m.GetInt(0);
+
 					if(m.GetInt(0) == 0)
                     {
-						GameObject newPlayer = playerPrefab;
-						newPlayer.GetComponent<PlayerIdentity>().SetTeam(Team.green);
-						myBall = newPlayer;
+						myBall = Instantiate(playerPrefab, startPoins[0].position, Quaternion.identity);
+						myBall.GetComponent<PlayerIdentity>().SetTeam((Team)0);
+						myBall.GetComponent<BallMover>()._powerBarImg = uiPowerBar.GetComponent<Image>();
 
-						GameObject newEnemy = playerPrefab;
-						newPlayer.GetComponent<PlayerIdentity>().SetTeam(Team.red);
-						enemyBall = newEnemy;
+						enemyBall = Instantiate(playerPrefab, startPoins[0].position, Quaternion.identity);
+						enemyBall.GetComponent<PlayerIdentity>().SetTeam((Team)1);
+						currBallMover = enemyBall.GetComponent<BallMover>();
 					}
 					else if(m.GetInt(0) == 1)
                     {
-						GameObject newPlayer = playerPrefab;
-						newPlayer.GetComponent<PlayerIdentity>().SetTeam(Team.red);
-						myBall = newPlayer;
+						myBall = Instantiate(playerPrefab, startPoins[0].position, Quaternion.identity);
+						myBall.GetComponent<PlayerIdentity>().SetTeam((Team)1);
+						myBall.GetComponent<BallMover>()._powerBarImg = uiPowerBar.GetComponent<Image>();
 
-						GameObject newEnemy = playerPrefab;
-						newPlayer.GetComponent<PlayerIdentity>().SetTeam(Team.green);
-						enemyBall = newEnemy;
+
+						enemyBall = Instantiate(playerPrefab, startPoins[0].position, Quaternion.identity);
+						enemyBall.GetComponent<PlayerIdentity>().SetTeam((Team)0);
+						currBallMover = enemyBall.GetComponent<BallMover>();
 					}
+					break;
 
+				case "CameraChange":
+					if(m.GetInt(0) == (int)_clientTeam)
+                    {
+						cameraController.SetBallForCamera(myBall);
+                    }
+                    else
+                    {
+						cameraController.SetBallForCamera(enemyBall);
+					}
+					break;
 
+				case "CanPlay":
+					myBall.GetComponent<BallMover>()._canPlay = true;
 					break;
-				case "Start":
-					CreationGame();
+
+				case "AdjustBallPos":
+					enemyBall.GetComponent<BallMover>().MoveBallAtWorldPos(new Vector3(m.GetFloat(0), m.GetFloat(1), m.GetFloat(2)));
 					break;
-				case "BallOtherPlayer":
-					break;
-					
 			}
 		}
 
 		// clear message queue after it's been processed
 		msgList.Clear();
 	}
-	void CreationGame()
-    {
-		Vector3 startPos = new Vector3(1, 1, 1);
-		Instantiate(myBall, startPos, Quaternion.identity);
-		Instantiate(enemyBall, startPos, Quaternion.identity);		
-    }
 
 	public void MoveBall(Vector3 newDir, float newPower)
 	{
-		ballMover.MoveBall(newDir, newPower);
-			
-		
+		currBallMover.MoveBall(newDir, newPower);		
 	}
 
-	public void SendPosition(Vector3 newDir, float newPower)
+	public void MoveBallServer(Vector3 newDir, float newPower)
     {
 		pioconnection.Send("Move", newDir.x, newDir.y, newDir.z, newPower);
     }
-	void OnGUI() {
-		
-		GUI.Label(new Rect(10, 160, 150, 20), "Toadstools picked: ");
+
+	public void AdjustBallPosServer(Vector3 pos)
+    {
+		pioconnection.Send("AdjustBallPos", pos.x, pos.y, pos.z);
+    }
+
+	public void PlayerEndRound()
+    {
+		pioconnection.Send("EndRound");
+    }
+
+	private void IsEndMap(PlayerIdentity currPlayer)
+	{
+		if(currPlayer == myBall.GetComponent<PlayerIdentity>())
+        {
+			pioconnection.Send("EndMap");
+        }
+	}
+
+	void OnGUI() 
+	{		
 		if (infomsg != "") {
 			GUI.Label(new Rect(10, 180, Screen.width, 20), infomsg);
 		}
