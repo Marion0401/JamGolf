@@ -151,7 +151,7 @@ public class BallMover : MonoBehaviour
 
     private void EndRound()
     {
-        _canPlay = false;
+        //_canPlay = false;
     }
 
     public void MoveBall(Vector3 newDir, float newPower)
