@@ -24,7 +24,8 @@ public class GameManager : MonoBehaviour {
 
 	private Connection pioconnection;
 	private List<Message> msgList = new List<Message>(); //  Messsage queue implementation
-	public static GameManager instance; 
+	public static GameManager instance;
+	public BallMover ballMover;
 
 
 	// UI stuff
@@ -97,8 +98,8 @@ public class GameManager : MonoBehaviour {
 			switch (m.Type) 
 			{
 				case "Move":
-					Debug.Log(m.GetInt(0));
-
+					Vector3 direction = new Vector3(m.GetFloat(0), m.GetFloat(1), m.GetFloat(2));
+					MoveBall(direction, m.GetFloat(3));
 					break;
 			}
 		}
@@ -107,9 +108,16 @@ public class GameManager : MonoBehaviour {
 		msgList.Clear();
 	}
 
-	public void SendPosition()
+	public void MoveBall(Vector3 newDir, float newPower)
+	{
+		ballMover.MoveBall(newDir, newPower);
+			
+		
+	}
+
+	public void SendPosition(Vector3 newDir, float newPower)
     {
-		pioconnection.Send("Move",2,3);
+		pioconnection.Send("Move", newDir.x, newDir.y, newDir.z, newPower);
     }
 	void OnGUI() {
 		

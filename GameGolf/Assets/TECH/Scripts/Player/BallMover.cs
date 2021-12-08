@@ -9,7 +9,7 @@ public class BallMover : MonoBehaviour
     [SerializeField] private float _powerSpeed = 0.10f;
     [SerializeField] private Image _powerBarImg = null;
     
-    private Rigidbody _rigidBody = null;
+    public Rigidbody _rigidBody = null;
 
     private Vector3 _currDirection = new Vector3();
 
@@ -70,13 +70,15 @@ public class BallMover : MonoBehaviour
         if (Input.GetMouseButtonUp(0))
         {
             MoveBall(_currDirection, _currPower);
+            GameManager.instance.SendPosition(_currDirection, _currPower);
         }
             
     }
 
     public void MoveBall(Vector3 newDir, float newPower)
     {
-        _rigidBody.AddForce(newDir * newPower, ForceMode.Impulse);        
+        _rigidBody.AddForce(newDir * newPower, ForceMode.Impulse);
+        
     }
 
     private Vector3 GetMouseClickWorldPos()

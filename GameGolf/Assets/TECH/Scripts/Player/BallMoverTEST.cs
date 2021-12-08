@@ -18,7 +18,7 @@ public class BallMoverTEST : MonoBehaviour
         {
             m_rigidBody.AddForce(transform.forward, ForceMode.Impulse);
            
-            GameManager.instance.SendPosition();
+            
         }
 
         if (Input.GetKeyDown(KeyCode.DownArrow))

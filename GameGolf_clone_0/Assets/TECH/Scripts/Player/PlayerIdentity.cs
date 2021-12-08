@@ -8,10 +8,10 @@ public class PlayerIdentity : MonoBehaviour
 
     public Team _team;
 
-
     public void SetTeam(Team newTeam)
     {
         _team = newTeam;
+        _ballPrefab[(int)_team].SetActive(true);
     }
 }
 
