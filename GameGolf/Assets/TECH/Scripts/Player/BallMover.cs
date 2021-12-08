@@ -25,10 +25,16 @@ public class BallMover : MonoBehaviour
 
     private void Update()
     {
-        mouseHit = GetMouseClickWorldPos();
+         mouseHit = GetMouseClickWorldPos();
         _currDirection = (mouseHit - transform.position).normalized;
         _currDirection.y = 0;
-        _directionOnFloor.transform.forward = _currDirection;
+
+        Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+        if( Physics.Raycast(ray, out RaycastHit hit, Mathf.Infinity, _floorMask))
+        {
+            _directionOnFloor.transform.forward = _currDirection;
+        }
+
 
         if (Input.GetMouseButtonDown(0))
         {
