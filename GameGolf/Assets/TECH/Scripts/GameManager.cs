@@ -23,8 +23,9 @@ public class GameManager : MonoBehaviour {
 	private List<Message> msgList = new List<Message>(); //  Messsage queue implementation
 	public static GameManager instance;
 	public BallMover ballMover;
-	public List<GameObject> balls= new List<GameObject>();
-	GameObject ball;
+	public GameObject playerPrefab = null;
+	public GameObject myBall;
+	public GameObject enemyBall;
 
 
 	// UI stuff
@@ -105,7 +106,28 @@ public class GameManager : MonoBehaviour {
 					CreationGame();
 					break;
 				case "Item":
-					ball = balls[m.GetInt(0)]; 
+					if(m.GetInt(0) == 0)
+                    {
+						GameObject newPlayer = playerPrefab;
+						newPlayer.GetComponent<PlayerIdentity>().SetTeam(Team.green);
+						myBall = newPlayer;
+
+						GameObject newEnemy = playerPrefab;
+						newPlayer.GetComponent<PlayerIdentity>().SetTeam(Team.red);
+						enemyBall = newEnemy;
+					}
+					else if(m.GetInt(0) == 1)
+                    {
+						GameObject newPlayer = playerPrefab;
+						newPlayer.GetComponent<PlayerIdentity>().SetTeam(Team.red);
+						myBall = newPlayer;
+
+						GameObject newEnemy = playerPrefab;
+						newPlayer.GetComponent<PlayerIdentity>().SetTeam(Team.green);
+						enemyBall = newEnemy;
+					}
+
+
 					break;
 				case "Start":
 					CreationGame();
@@ -122,8 +144,8 @@ public class GameManager : MonoBehaviour {
 	void CreationGame()
     {
 		Vector3 startPos = new Vector3(1, 1, 1);
-		Instantiate(ball, startPos, Quaternion.identity);
-		pioconnection.Send("BallOtherPlayer", startPos.x, startPos.y, startPos.z);
+		Instantiate(myBall, startPos, Quaternion.identity);
+		Instantiate(enemyBall, startPos, Quaternion.identity);		
     }
 
 	public void MoveBall(Vector3 newDir, float newPower)
