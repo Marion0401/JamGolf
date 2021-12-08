@@ -54,7 +54,7 @@ public class BallMover : MonoBehaviour
          mouseHit = GetMouseClickWorldPos();
         _currDirection = (mouseHit - transform.position).normalized;
 
-        _currDirection.y = 0.5f;
+        _currDirection.y = 0.2f;
 
         DirectionOnFloorUi();
 
@@ -142,10 +142,9 @@ public class BallMover : MonoBehaviour
     {
         _rigidBody.velocity = Vector3.zero;
         transform.position = _lastPosition;
-        EndRound();
     }
 
-    private void BallStop()
+    public void BallStop()
     {
         _isLaunched = false;
         _lastPosition = transform.position;

@@ -24,10 +24,12 @@ public class GameManager : MonoBehaviour {
 	public BallMover currBallMover;
 	public GameObject playerPrefab = null;
 	public GameObject uiPowerBar = null;
-	private GameObject myBall;
+	public GameObject myBall;
 	private GameObject enemyBall;
 	public CameraController cameraController = null;
 	public Transform[] startPoins = new Transform[0];
+
+	private int levelIndex = 0;
 
 	public Team _clientTeam;
 
@@ -126,22 +128,22 @@ public class GameManager : MonoBehaviour {
 
 					if(m.GetInt(0) == 0)
                     {
-						myBall = Instantiate(playerPrefab, startPoins[0].position, Quaternion.identity);
+						myBall = Instantiate(playerPrefab, startPoins[levelIndex].position, Quaternion.identity);
 						myBall.GetComponent<PlayerIdentity>().SetTeam((Team)0);
 						myBall.GetComponent<BallMover>()._powerBarImg = uiPowerBar.GetComponent<Image>();
 
-						enemyBall = Instantiate(playerPrefab, startPoins[0].position, Quaternion.identity);
+						enemyBall = Instantiate(playerPrefab, startPoins[levelIndex].position, Quaternion.identity);
 						enemyBall.GetComponent<PlayerIdentity>().SetTeam((Team)1);
 						currBallMover = enemyBall.GetComponent<BallMover>();
 					}
 					else if(m.GetInt(0) == 1)
                     {
-						myBall = Instantiate(playerPrefab, startPoins[0].position, Quaternion.identity);
+						myBall = Instantiate(playerPrefab, startPoins[levelIndex].position, Quaternion.identity);
 						myBall.GetComponent<PlayerIdentity>().SetTeam((Team)1);
 						myBall.GetComponent<BallMover>()._powerBarImg = uiPowerBar.GetComponent<Image>();
 
 
-						enemyBall = Instantiate(playerPrefab, startPoins[0].position, Quaternion.identity);
+						enemyBall = Instantiate(playerPrefab, startPoins[levelIndex].position, Quaternion.identity);
 						enemyBall.GetComponent<PlayerIdentity>().SetTeam((Team)0);
 						currBallMover = enemyBall.GetComponent<BallMover>();
 					}
@@ -164,6 +166,14 @@ public class GameManager : MonoBehaviour {
 
 				case "AdjustBallPos":
 					enemyBall.GetComponent<BallMover>().MoveBallAtWorldPos(new Vector3(m.GetFloat(0), m.GetFloat(1), m.GetFloat(2)));
+					break;
+
+				case "SwitchLevel":
+					levelIndex++;
+					myBall.GetComponent<BallMover>().MoveBallAtWorldPos(startPoins[levelIndex].position);
+					enemyBall.GetComponent<BallMover>().MoveBallAtWorldPos(startPoins[levelIndex].position);
+
+					pioconnection.Send("StartNewLevel");
 					break;
 			}
 		}

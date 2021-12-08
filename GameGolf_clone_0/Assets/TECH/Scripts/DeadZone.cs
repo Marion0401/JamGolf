@@ -8,7 +8,10 @@ public class DeadZone : MonoBehaviour
     {
         if(other.gameObject.TryGetComponent<BallMover>(out BallMover ballMover))
         {
-            ballMover.ResetBallPosWhenOutOfMap();
+            if(ballMover == GameManager.instance.myBall.GetComponent<BallMover>())
+            {
+                ballMover.ResetBallPosWhenOutOfMap();
+            }
         }
     }
 }

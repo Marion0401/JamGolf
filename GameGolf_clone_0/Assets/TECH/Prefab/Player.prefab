@@ -138,7 +138,7 @@ Transform:
   m_GameObject: {fileID: 2729186048757882686}
   m_LocalRotation: {x: -0.7071068, y: -0, z: -0, w: 0.7071068}
   m_LocalPosition: {x: 0, y: -0, z: 2}
-  m_LocalScale: {x: 10, y: 400, z: 0}
+  m_LocalScale: {x: 5, y: 400, z: 0}
   m_Children: []
   m_Father: {fileID: 1225674000331198691}
   m_RootOrder: 0
@@ -327,7 +327,7 @@ Rigidbody:
   m_IsKinematic: 0
   m_Interpolate: 0
   m_Constraints: 112
-  m_CollisionDetection: 0
+  m_CollisionDetection: 1
 --- !u!135 &4590510679699274969
 SphereCollider:
   m_ObjectHideFlags: 0
@@ -335,7 +335,7 @@ SphereCollider:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 7757898118672949608}
-  m_Material: {fileID: 13400000, guid: 1b73994cd21d38b44ad21b7c1a053da0, type: 2}
+  m_Material: {fileID: 13400000, guid: 35eb01a3a053f0142975c4b9e86b339f, type: 2}
   m_IsTrigger: 0
   m_Enabled: 1
   serializedVersion: 2
@@ -357,7 +357,7 @@ MonoBehaviour:
   _floorMask:
     serializedVersion: 2
     m_Bits: 8
-  _maxPower: 5
+  _maxPower: 7
   _powerSpeed: 0.005
   _powerBarImg: {fileID: 0}
   _canPlay: 0
