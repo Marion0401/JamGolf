@@ -5,10 +5,11 @@ using UnityEngine;
 
 public class EndRound : MonoBehaviour
 {
-    public static event Action BallInHole;
+    public static event Action<PlayerIdentity> BallInHole;
 
     private void OnTriggerEnter(Collider other)
     {
-        BallInHole?.Invoke();
+        PlayerIdentity currPlayer = other.gameObject.GetComponent<PlayerIdentity>();
+        BallInHole?.Invoke(currPlayer);
     }
 }
