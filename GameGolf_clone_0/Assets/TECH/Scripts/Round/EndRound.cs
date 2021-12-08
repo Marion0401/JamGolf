@@ -11,12 +11,15 @@ public class EndRound : MonoBehaviour
 
     private void OnTriggerEnter(Collider other)
     {
+        if (other.gameObject.GetComponent<PlayerIdentity>() != GameManager.instance.myBall.GetComponent<PlayerIdentity>()) { return; }
         clock = 1f;      
     }
 
     private void OnTriggerStay(Collider other)
     {
         PlayerIdentity currPlayer = other.gameObject.GetComponent<PlayerIdentity>();
+
+        if (currPlayer != GameManager.instance.myBall.GetComponent<PlayerIdentity>()) { return; }
 
         if(clock != -1)
         {
