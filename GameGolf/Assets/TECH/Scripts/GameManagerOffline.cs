@@ -18,8 +18,10 @@ public class GameManagerOffline : MonoBehaviour
 
     #endregion
 
-    private void IsEndRound()
+    private void IsEndRound(PlayerIdentity currPlayer)
     {
-        Debug.Log("Ball dans le trou");
+        Debug.Log(currPlayer);
     }
+
+
 }

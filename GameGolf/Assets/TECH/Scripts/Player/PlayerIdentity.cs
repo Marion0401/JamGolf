@@ -6,7 +6,6 @@ public class PlayerIdentity : MonoBehaviour
 {
     [SerializeField] private GameObject[] _ballPrefab = new GameObject[0];
 
-
     private void Start()
     {
         SetTeam(Team.red);
