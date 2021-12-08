@@ -1,5 +1,3 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -71,8 +69,14 @@ public class BallMover : MonoBehaviour
 
         if (Input.GetMouseButtonUp(0))
         {
-            _rigidBody.AddForce(_currDirection * _currPower, ForceMode.Impulse);
+            MoveBall(_currDirection, _currPower);
         }
+            
+    }
+
+    public void MoveBall(Vector3 newDir, float newPower)
+    {
+        _rigidBody.AddForce(newDir * newPower, ForceMode.Impulse);        
     }
 
     private Vector3 GetMouseClickWorldPos()
