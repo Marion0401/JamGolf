@@ -15,10 +15,7 @@ using System.Collections;
 using System.Collections.Generic;
 using PlayerIOClient;
 
-public class ChatEntry {
-	public string text = "";
-	public bool mine = true;
-}
+
 
 public class GameManager : MonoBehaviour {
 
@@ -26,6 +23,8 @@ public class GameManager : MonoBehaviour {
 	private List<Message> msgList = new List<Message>(); //  Messsage queue implementation
 	public static GameManager instance;
 	public BallMover ballMover;
+	public List<GameObject> balls= new List<GameObject>();
+	GameObject ball;
 
 
 	// UI stuff
@@ -73,6 +72,7 @@ public class GameManager : MonoBehaviour {
 						// We successfully joined a room so set up the message handler
 						pioconnection = connection;
 						pioconnection.OnMessage += handlemessage;
+						
 					},
 					delegate (PlayerIOError error) {
 						Debug.Log("Error Joining Room: " + error.ToString());
@@ -101,12 +101,30 @@ public class GameManager : MonoBehaviour {
 					Vector3 direction = new Vector3(m.GetFloat(0), m.GetFloat(1), m.GetFloat(2));
 					MoveBall(direction, m.GetFloat(3));
 					break;
+				case "CreateGame":
+					CreationGame();
+					break;
+				case "Item":
+					ball = balls[m.GetInt(0)]; 
+					break;
+				case "Start":
+					CreationGame();
+					break;
+				case "BallOtherPlayer":
+					break;
+					
 			}
 		}
 
 		// clear message queue after it's been processed
 		msgList.Clear();
 	}
+	void CreationGame()
+    {
+		Vector3 startPos = new Vector3(1, 1, 1);
+		Instantiate(ball, startPos, Quaternion.identity);
+		pioconnection.Send("BallOtherPlayer", startPos.x, startPos.y, startPos.z);
+    }
 
 	public void MoveBall(Vector3 newDir, float newPower)
 	{

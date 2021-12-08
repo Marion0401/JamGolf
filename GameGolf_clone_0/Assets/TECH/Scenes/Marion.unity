@@ -228,6 +228,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   ballMover: {fileID: 1100210890}
+  balls:
+  - {fileID: 919132149155446097, guid: 65cd0e113a3dc3344913e059514ed88b, type: 3}
+  - {fileID: 919132149155446097, guid: 87ccea8e1fb1af3438ae5c057f3b24d0, type: 3}
 --- !u!4 &354433351
 Transform:
   m_ObjectHideFlags: 0
@@ -778,6 +781,10 @@ PrefabInstance:
       propertyPath: _powerBarImg
       value: 
       objectReference: {fileID: 1027172446}
+    - target: {fileID: 3064705776237181256, guid: 71d2142192aa49640963d235cce9790a, type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 7757898118672949608, guid: 71d2142192aa49640963d235cce9790a, type: 3}
       propertyPath: m_Name
       value: Player
